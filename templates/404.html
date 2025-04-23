@@ -1,0 +1,119 @@
+{% extends 'blogs/base.html' %}
+{% load static %}
+{% block title %} 404 - Page Not Found | BlogToHaven {% endblock %}
+{% block content %} 
+<body class="bg-black">
+    <section class="min-h-screen flex items-center justify-center p-4"> 
+        <div class="relative max-w-xs w-full">
+            <!-- Animated Background -->
+            <div class="absolute -inset-3">
+                <div class="absolute inset-0 bg-gradient-to-r from-sky-500/5 to-sky-400/5 rounded-lg blur-lg animate-pulse"></div>
+            </div>
+            
+            <!-- Main Content -->
+            <div class="relative z-10 bg-black/40 backdrop-blur-sm p-5 rounded-lg border border-sky-500/20">
+                <!-- Error Icon -->
+                <div class="flex justify-center mb-3">
+                    <div class="relative w-12 h-12">
+                        <svg class="w-full h-full text-sky-400/20 animate-spin-slow" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                        </svg>
+                        <svg class="absolute top-0 left-0 w-full h-full text-sky-400 animate-bounce" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                        </svg>
+                    </div>
+                </div>
+                
+                <!-- Error Text -->
+                <div class="text-center space-y-2">
+                    <h1 class="text-5xl md:text-6xl font-bold font-mono text-sky-400 animate-pulse">404</h1>
+                    <p class="text-lg md:text-xl font-semibold text-sky-300">Page Not Found</p>
+                    <div class="h-6 overflow-hidden">
+                        <p class="text-xs md:text-sm text-sky-400/80 transition-all duration-500 transform" id="errorMessage">
+                            This page went on a coffee break
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- Action Button -->
+                <div class="mt-4 flex justify-center">
+                    <a href="{% url 'Home' %}" 
+                    class="group px-3 py-1.5 bg-sky-500/10 text-sky-400 rounded-lg border border-sky-500/20 hover:bg-sky-500/20 hover:text-sky-300 transition-all duration-300 flex items-center gap-1.5 text-sm">
+                    <svg class="w-3.5 h-3.5 group-hover:translate-x-[-2px] transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                    </svg>
+                    Back Home
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+        @keyframes spin-slow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .animate-spin-slow {
+            animation: spin-slow 8s linear infinite;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .slide-up {
+            animation: slideUp 0.5s ease-out forwards;
+        }
+
+        .slide-down {
+            animation: slideDown 0.5s ease-out forwards;
+        }
+    </style>
+
+<script>
+        const messages = [
+            "This page went on a coffee break",
+            "Lost in the digital Bermuda Triangle",
+            "The page you're looking for is on another server",
+            "404: Page not found in this dimension",
+            "This page is currently on vacation",
+            "The page you seek is in another castle",
+            "404: Page not found in our database",
+            "This page is currently out for lunch",
+            "The page you're looking for is on a sabbatical",
+            "404: Page not found in our universe"
+        ];
+
+        let currentIndex = 0;
+        let isSlidingUp = true;
+
+        function changeMessage() {
+            const element = document.getElementById('errorMessage');
+            
+            // Remove previous animation class
+            element.classList.remove('slide-up', 'slide-down');
+            
+            // Add new animation class
+            element.classList.add(isSlidingUp ? 'slide-up' : 'slide-down');
+            
+            // Update message
+            currentIndex = (currentIndex + 1) % messages.length;
+            element.textContent = messages[currentIndex];
+            
+            // Toggle animation direction
+            isSlidingUp = !isSlidingUp;
+        }
+
+        // Change message every 3 seconds
+        setInterval(changeMessage, 3000);
+    </script>
+</body>
+</html>
+{% endblock %}

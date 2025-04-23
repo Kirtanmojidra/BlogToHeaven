@@ -1,0 +1,461 @@
+{% extends "blogs/base.html" %}
+{% load cloudinary %}
+{% block title %} {{ blog.title }} | BlogToHaven {% endblock %}
+{% load static %}
+{% block content %}
+<div class="min-h-screen pt-16 bg-black">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Blog Header -->
+        <div class="bg-black/40 backdrop-blur-sm rounded-xl shadow-lg border border-sky-500/20 p-4 mb-6">
+            <div class="flex items-center justify-between">
+                <h1 class="pb-2 text-sky-400/90 text-md">Blog / {{ blog.slug }}</h1>
+                <h1 class="pb-2 text-sky-400/90 text-md">Date: {{ blog.created_At | date:"M d, Y" }}</h1>
+            </div>
+            <div class="flex flex-col md:flex-row items-start gap-6">
+                <div class="w-full md:w-1/4">
+                    {% cloudinary blog.blog_img  format="jpg" width=120 height=80 crop="fill" alt="{{ blog.title }}" class="w-full h-48 object-cover rounded-lg border border-sky-500/20" %}
+                </div>
+                <div class="flex-1">
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="px-2 py-1 bg-sky-500/10 text-sky-400 rounded-full text-xs border border-sky-500/20">{{ blog.categories.name }}</span>
+                    </div>
+                    <h1 class="text-2xl font-bold text-sky-400 mb-3">{{ blog.title }}</h1>
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="flex items-center gap-2">
+                            <div class="w-8 h-8 rounded-full bg-black/40 backdrop-blur-sm border border-sky-500/20 overflow-hidden">
+                                {% cloudinary blog.author.profile_img  format="jpg" width=120 height=80 crop="fill" alt="{{ blog.author.username }}" class="w-full h-full object-cover" %}
+                                
+                            </div>
+                            <span class="text-sky-400/90 text-sm">{{ blog.author.username }}</span>
+                        </div>
+                        <span class="text-sky-400/90 text-sm">{{ blog.created_at|date:"M d, Y" }}</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button class="flex items-center gap-1.5 px-3 py-1.5 bg-sky-500/10 text-sky-400 rounded-lg border border-sky-500/20 hover:bg-sky-500/20 transition-all duration-300 text-sm">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path>
+                                <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>{{ blog.views }} Views</span>
+                        </button>
+                        <button onclick="likePost('{{ blog.slug }}')" class="flex items-center gap-1.5 px-3 py-1.5 bg-sky-500/10 text-sky-400 rounded-lg border border-sky-500/20 hover:bg-sky-500/20 transition-all duration-300 text-sm {% if is_liked %}bg-sky-500/20 text-sky-300{% endif %}">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z"></path>
+                            </svg>
+                            <span id="like-count">{{ blog.likes.count }} Likes</span>
+                        </button>
+                        <button class="flex items-center gap-1.5 px-3 py-1.5 bg-sky-500/10 text-sky-400 rounded-lg border border-sky-500/20 hover:bg-sky-500/20 transition-all duration-300 text-sm">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z"></path>
+                            </svg>
+                            <span>{{ blog.comments.count }} Comments</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Blog Content -->
+        <div class="bg-black/40 backdrop-blur-sm rounded-xl shadow-lg border border-sky-500/20 p-6 mb-6">
+            <div class="prose prose-invert max-w-none">
+                <style>
+                    .prose pre {
+                        background-color: #0f172a !important;
+                        border: 1px solid rgba(56, 189, 248, 0.2);
+                        border-radius: 0.5rem;
+                        padding: 1rem;
+                        margin: 1.5rem 0;
+                    }
+                    .prose code {
+                        color: #ffffff;
+                        background-color: rgba(56, 189, 248, 0.1);
+                        padding: 0.2em 0.4em;
+                        border-radius: 0.25rem;
+                    }
+                    .prose pre code {
+                        color: #ffffff;
+                        background-color: transparent;
+                        padding: 0;
+                    }
+                    .prose h1, .prose h2, .prose h3, .prose h4 {
+                        color: #ffffff;
+                        border-bottom: 1px solid rgba(56, 189, 248, 0.2);
+                        padding-bottom: 0.5rem;
+                        margin-bottom: 1rem;
+                    }
+                    .prose p {
+                        color: #ffffff;
+                        margin-bottom: 1.5rem;
+                    }
+                    .prose a {
+                        color: #38bdf8;
+                        text-decoration: none;
+                        border-bottom: 1px solid rgba(56, 189, 248, 0.3);
+                        transition: all 0.2s;
+                    }
+                    .prose a:hover {
+                        color: #7dd3fc;
+                        border-bottom-color: rgba(125, 211, 252, 0.5);
+                    }
+                    .prose blockquote {
+                        color: #ffffff;
+                        border-left: 4px solid rgba(56, 189, 248, 0.3);
+                        padding-left: 1rem;
+                        margin: 1.5rem 0;
+                        font-style: italic;
+                    }
+                    .prose ul, .prose ol {
+                        color: #ffffff;
+                        margin: 1.5rem 0;
+                    }
+                    .prose li {
+                        margin-bottom: 0.5rem;
+                    }
+                    .prose hr {
+                        border-color: rgba(56, 189, 248, 0.2);
+                        margin: 2rem 0;
+                    }
+                    .prose img {
+                        border-radius: 0.5rem;
+                        border: 1px solid rgba(56, 189, 248, 0.2);
+                        margin: 1.5rem 0;
+                    }
+                    .prose table {
+                        width: 100%;
+                        border-collapse: collapse;
+                        margin: 1.5rem 0;
+                    }
+                    .prose th, .prose td {
+                        border: 1px solid rgba(56, 189, 248, 0.2);
+                        padding: 0.5rem;
+                    }
+                    .prose th {
+                        background-color: rgba(56, 189, 248, 0.1);
+                    }
+                </style>
+                {{ blog.content.html |safe }}
+            </div>
+        </div>
+
+        <!-- Comments Section -->
+        <div class="bg-black/40 backdrop-blur-sm rounded-xl shadow-lg border border-sky-500/20 p-6">
+            <h2 class="text-xl font-bold text-sky-400 mb-4">Comments</h2>
+            
+            <!-- Comment Form -->
+            <div class="mb-6">
+                <form id="comment-form" class="space-y-3">
+                    <div class="flex items-start gap-3">
+                        <div class="w-8 h-8 rounded-full bg-black/40 backdrop-blur-sm border border-sky-500/20 overflow-hidden">
+                            {% cloudinary Auth_user.profile_img  format="jpg" width=120 height=80 crop="fill"  alt="{{ Auth_user.username }}" class="w-full h-full object-cover" %} 
+                            
+                        </div>
+                        <div class="flex-1">
+                            <textarea 
+                                id="comment-content" 
+                                rows="3" 
+                                class="w-full px-3 py-2 bg-black/40 backdrop-blur-sm border border-sky-500/20 rounded-lg focus:outline-none focus:border-sky-400 text-gray-300 placeholder-gray-500 text-sm resize-none"
+                                placeholder="Write a comment..."
+                            ></textarea>
+                            <div class="flex justify-end mt-2">
+                                <button 
+                                    type="submit" 
+                                    class="px-4 py-2 bg-sky-500/10 text-sky-400 rounded-lg border border-sky-500/20 hover:bg-sky-500/20 transition-all duration-300 text-sm"
+                                >
+                                    Post Comment
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Add this after the comment form -->
+            <div id="comment-message" class="hidden mb-4 p-3 rounded-lg text-sm"></div>
+
+            <!-- Comments List -->
+            <div class="space-y-4" id="comments-list">
+                {% for comment in blog.comments.all %}
+                    {% if not comment.isReply %}
+                    <div class="comment-item" data-comment-id="{{ comment.id }}">
+                        <div class="flex gap-3">
+                            <div class="flex-shrink-0">
+                                <div class="w-8 h-8 rounded-full bg-black/40 backdrop-blur-sm border border-sky-500/20 overflow-hidden">
+                                    {% cloudinary comment.user.profile_img  format="jpg" width=120 height=80 crop="fill" alt="{{ comment.user.username }}" class="w-full h-full object-cover" %}
+                                </div>
+                            </div>
+                            <div class="flex-1">
+                                <div class="bg-black/40 backdrop-blur-sm rounded-lg p-3 border border-sky-500/20">
+                                    <div class="flex items-center justify-between mb-1.5">
+                                        <span class="text-sky-400/90 text-sm">{{ comment.user.username }}</span>
+                                        <span class="text-sky-400/90 text-xs">{{ comment.created_at|date:"M d, Y" }}</span>
+                                    </div>
+                                    <p class="text-white text-sm">{{ comment.content }}</p>
+                                    <div class="mt-2 flex items-center gap-3">
+                                        <button 
+                                            onclick="showReplyForm('{{ comment.id }}')" 
+                                            class="text-sky-400/90 text-xs hover:text-sky-300 transition-colors duration-200"
+                                        >
+                                            Reply
+                                        </button>
+                                        {% if comment.replies.count > 0 %}
+                                        <button 
+                                            onclick="toggleReplies('{{ comment.id }}')" 
+                                            class="text-sky-400/90 text-xs hover:text-sky-300 transition-colors duration-200 flex items-center gap-1"
+                                        >
+                                            <span class="replies-count">{{ comment.replies.count }}</span>
+                                            <span class="replies-text">replies</span>
+                                            <svg class="w-3 h-3 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                            </svg>
+                                        </button>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                
+                                <!-- Replies -->
+                                <div id="replies-{{ comment.id }}" class="ml-8 mt-2 space-y-2 hidden">
+                                    {% for reply in comment.replies.all %}
+                                    <div class="flex gap-3">
+                                        <div class="flex-shrink-0">
+                                            <div class="w-6 h-6 rounded-full bg-black/40 backdrop-blur-sm border border-sky-500/20 overflow-hidden">
+                                                {% cloudinary reply.user.profile_img  format="jpg" width=120 height=80 crop="fill" alt="{{ reply.user.username }}" class="w-full h-full object-cover" %}
+                                            </div>
+                                        </div>
+                                        <div class="flex-1">
+                                            <div class="bg-black/40 backdrop-blur-sm rounded-lg p-2 border border-sky-500/20">
+                                                <div class="flex items-center justify-between mb-1">
+                                                    <span class="text-sky-400/90 text-xs">{{ reply.user.username }}</span>
+                                                    <span class="text-sky-400/90 text-xs">{{ reply.created_at|date:"M d, Y" }}</span>
+                                                </div>
+                                                <p class="text-white text-xs">{{ reply.content }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function likePost(slug) {
+    fetch(`/like/${slug}`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken')
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data.removed)
+        if (data.status) {
+            const likeButton = document.querySelector(`button[onclick="likePost('${slug}')"]`);
+            const likeCount = document.getElementById('like-count');
+            
+            if (data.removed) {
+                // User unliked the post
+                likeButton.classList.remove('bg-sky-500/20', 'text-sky-300');
+                likeCount.textContent = `${parseInt(likeCount.textContent) - 1} Likes`;
+            } else {
+                // User liked the post
+                likeButton.classList.add('bg-sky-500/20', 'text-sky-300');
+                likeCount.textContent = `${parseInt(likeCount.textContent) + 1} Likes`;
+            }
+        } else {
+            if (data.Message === "Please Login") {
+                window.location.href = "/login";
+            }
+            if(data.removed){
+                likeButton.classList.remove('bg-sky-500/20', 'text-sky-300');
+                likeCount.textContent = `${parseInt(likeCount.textContent) - 1} Likes`;
+            }
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+// Comment functionality
+document.getElementById('comment-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const content = document.getElementById('comment-content').value.trim();
+    if (!content) return;
+
+    const messageDiv = document.getElementById('comment-message');
+    messageDiv.className = 'mb-4 p-3 rounded-lg text-sm';
+    messageDiv.textContent = 'Posting comment...';
+    messageDiv.classList.remove('hidden', 'bg-red-500/10', 'text-red-400', 'bg-sky-500/10', 'text-sky-400');
+    messageDiv.classList.add('bg-sky-500/10', 'text-sky-400');
+
+    fetch(`/comment/{{ blog.slug }}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken')
+        },
+        body: JSON.stringify({
+            content: content,
+            parent_id: null
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status) {
+            messageDiv.textContent = 'Comment posted successfully!';
+            messageDiv.classList.remove('bg-red-500/10', 'text-red-400');
+            messageDiv.classList.add('bg-sky-500/10', 'text-sky-400');
+            // Clear the form
+            document.getElementById('comment-content').value = '';
+            // Refresh comments after a short delay
+            setTimeout(() => {
+                location.reload();
+            }, 1000);
+        } else {
+            if (data.Message === "Please Login") {
+                window.location.href = "/login";
+            } else {
+                messageDiv.textContent = data.Message || 'Error posting comment. Please try again.';
+                messageDiv.classList.remove('bg-sky-500/10', 'text-sky-400');
+                messageDiv.classList.add('bg-red-500/10', 'text-red-400');
+            }
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        messageDiv.textContent = 'An error occurred. Please try again.';
+        messageDiv.classList.remove('bg-sky-500/10', 'text-sky-400');
+        messageDiv.classList.add('bg-red-500/10', 'text-red-400');
+    });
+});
+
+function showReplyForm(commentId) {
+    const commentItem = document.querySelector(`[data-comment-id="${commentId}"]`);
+    const existingForm = commentItem.querySelector('.reply-form');
+    
+    if (existingForm) {
+        existingForm.remove();
+        return;
+    }
+
+    const replyForm = document.createElement('div');
+    replyForm.className = 'reply-form ml-8 mt-2';
+    replyForm.innerHTML = `
+        <form class="space-y-2">
+            <div class="flex items-start gap-2">
+                <div class="w-6 h-6 rounded-full bg-black/40 backdrop-blur-sm border border-sky-500/20 overflow-hidden">
+                    <img src="/media/uploads/profile/{{ Auth_user.profile_img }}" alt="{{ Auth_user.username }}" class="w-full h-full object-cover">
+                </div>
+                <div class="flex-1">
+                    <textarea 
+                        rows="2" 
+                        class="w-full px-2 py-1 bg-black/40 backdrop-blur-sm border border-sky-500/20 rounded-lg focus:outline-none focus:border-sky-400 text-gray-300 placeholder-gray-500 text-xs resize-none"
+                        placeholder="Write a reply..."
+                    ></textarea>
+                    <div class="flex justify-end mt-1">
+                        <button 
+                            type="submit" 
+                            class="px-3 py-1 bg-sky-500/10 text-sky-400 rounded-lg border border-sky-500/20 hover:bg-sky-500/20 transition-all duration-300 text-xs"
+                        >
+                            Post Reply
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    `;
+
+    commentItem.appendChild(replyForm);
+
+    replyForm.querySelector('form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const content = this.querySelector('textarea').value.trim();
+        if (!content) return;
+
+        const submitButton = this.querySelector('button[type="submit"]');
+        const originalText = submitButton.textContent;
+        submitButton.textContent = 'Posting...';
+        submitButton.disabled = true;
+
+        fetch(`/comment/{{ blog.slug }}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: JSON.stringify({
+                content: content,
+                parent_id: commentId
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status) {
+                submitButton.textContent = 'Posted!';
+                submitButton.classList.add('bg-sky-500/20', 'text-sky-300');
+                setTimeout(() => {
+                    location.reload();
+                }, 1000);
+            } else {
+                if (data.Message === "Please Login") {
+                    window.location.href = "/login";
+                } else {
+                    submitButton.textContent = 'Error';
+                    submitButton.classList.add('bg-red-500/20', 'text-red-400');
+                    setTimeout(() => {
+                        submitButton.textContent = originalText;
+                        submitButton.classList.remove('bg-red-500/20', 'text-red-400');
+                        submitButton.disabled = false;
+                    }, 2000);
+                }
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            submitButton.textContent = 'Error';
+            submitButton.classList.add('bg-red-500/20', 'text-red-400');
+            setTimeout(() => {
+                submitButton.textContent = originalText;
+                submitButton.classList.remove('bg-red-500/20', 'text-red-400');
+                submitButton.disabled = false;
+            }, 2000);
+        });
+    });
+}
+
+function toggleReplies(commentId) {
+    const repliesDiv = document.getElementById(`replies-${commentId}`);
+    const button = document.querySelector(`button[onclick="toggleReplies('${commentId}')"]`);
+    const arrow = button.querySelector('svg');
+    
+    if (repliesDiv.classList.contains('hidden')) {
+        repliesDiv.classList.remove('hidden');
+        arrow.classList.add('rotate-180');
+    } else {
+        repliesDiv.classList.add('hidden');
+        arrow.classList.remove('rotate-180');
+    }
+}
+</script>
+{% endblock %}

@@ -1,0 +1,302 @@
+{% extends 'blogs/base.html'%} {% load static %} 
+{% load cloudinary %}
+{% block title %} Profile | BlogToHaven {% endblock %} {% block content %}
+
+<div class="bg-black pt-16">
+  <div class="max-w-7xl mx-auto p-4 md:p-8">
+    <!-- Profile Header -->
+    <div class="bg-black/40 backdrop-blur-sm rounded-lg border border-sky-500/20 p-4">
+      <div class="flex flex-col md:flex-row items-center gap-4">
+        <!-- Left Section: Profile Info -->
+        <div class="flex-shrink-0 md:w-1/3 flex flex-col items-center">
+          <div class="relative group">
+           
+            {% cloudinary Auth_user.profile_img.url  format="jpg" width=120 height=80 crop="fill" class="w-32 h-32 rounded-full border-2 border-sky-500/20 object-cover object-center" id="profile" %}
+            {% if Auth_user.username == user.username %}  
+            <div class="absolute inset-0 flex items-center justify-center bg-black/60 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <label for="profile_image" class="cursor-pointer">
+                <svg class="w-8 h-8 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                </svg>
+              </label>
+            </div>
+            {% endif %}
+          </div>
+          <input type="file" accept="image/*" class="hidden" id="profile_image"/>
+          <h2 class="text-xl font-bold mt-3 text-white">
+            @{{ user.username }}
+          </h2>
+          {% if Auth_user.username == user.username %}
+          <div class="flex justify-center mt-2">
+            <a href="{% url 'Create Blog' %}" class="flex items-center px-3 py-1.5 bg-sky-500/10 text-sky-400 rounded-lg border border-sky-500/20 hover:bg-sky-500/20 hover:text-sky-300 transition-all duration-300">
+              <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+              </svg>
+              Create blog
+            </a>
+          </div>
+          {% endif %}
+          {% if Auth_user.username != user.username %}
+          <div class="flex justify-center mt-2">
+            <button class="px-4 py-1.5 bg-sky-500/10 text-sky-400 rounded-lg border border-sky-500/20 hover:bg-sky-500/20 hover:text-sky-300 transition-all duration-300 following {% if Is_following == False %} hidden {% endif %}">
+              Following
+            </button>
+            <button class="px-4 py-1.5 bg-sky-500/10 text-sky-400 rounded-lg border border-sky-500/20 hover:bg-sky-500/20 hover:text-sky-300 transition-all duration-300 follow {% if Is_following %} hidden {% endif %}">
+              Follow
+            </button>
+          </div>
+          {% endif %}
+        </div>
+ 
+        <!-- Right Section: Blog Stats -->
+        <div class="mt-4 md:mt-0 md:ml-6 flex-1">
+          <!-- Blog Details -->
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div class="bg-black/40 backdrop-blur-sm p-3 rounded-lg text-center border border-sky-500/20">
+              <p class="text-gray-400 text-sm">Total Blogs</p>
+              <h3 class="text-lg font-semibold text-white">
+                {{ user.blogs.count }}
+              </h3>
+            </div>
+            <div class="bg-black/40 backdrop-blur-sm p-3 rounded-lg text-center border border-sky-500/20">
+              <p class="text-gray-400 text-sm">Likes Received</p>
+              <h3 class="text-lg font-semibold text-white">
+                {{ user.like.count }}
+              </h3>
+            </div>
+            <div class="bg-black/40 backdrop-blur-sm p-3 rounded-lg text-center border border-sky-500/20">
+              <p class="text-gray-400 text-sm">Followers</p>
+              <h3 class="text-lg font-semibold text-white follower_count" id="follower_count">
+                {{ user.followers_users.count }}
+              </h3>
+            </div>
+            <div class="bg-black/40 backdrop-blur-sm p-3 rounded-lg text-center border border-sky-500/20">
+              <p class="text-gray-400 text-sm">Following</p>
+              <h3 class="text-lg font-semibold text-white">
+                {{ user.following_users.count }}
+              </h3>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Blog List -->
+    <div class="mt-6">
+      <h1 class="text-xl font-semibold text-sky-400 border-b border-sky-500/20 pb-2">
+        Posts
+      </h1>
+      {% if blogs %}
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+        {% for blog in blogs %}
+        <div class="group bg-black border border-sky-500/30 rounded-lg overflow-hidden hover:border-sky-400/50 transition-all duration-300 hover:shadow-lg hover:shadow-sky-500/20">
+          <a href="{% url 'Blog_Details' blog.slug %}">
+            <div class="relative h-36 overflow-hidden">
+              {% cloudinary blog.blog_img  format="jpg" width=120 height=80 crop="fill" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500" alt="{{ blog.title }}" %}
+              <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
+            </div>
+          </a>
+          <div class="p-3">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-sky-400/90 text-sm">{{ blog.author.username }}</span>
+              <span class="text-sky-400/90 text-sm">{{ blog.created_At | date:"M d, Y"}}</span>
+            </div>
+            <a href="{% url 'Blog_Details' blog.slug %}">
+              <h5 class="text-base font-semibold text-sky-300 min-h-[3.5rem] line-clamp-2 mb-2 group-hover:text-sky-400 transition-colors duration-200">
+                {{ blog.title }}
+              </h5>
+            </a>
+            <div class="flex items-center justify-between">
+              <a href="{% url 'Blog_Details' blog.slug %}"
+                class="text-sky-500 hover:text-sky-400 transition-colors duration-200 text-xs">
+                Read more →
+              </a>
+              {% if Auth_user == user %}
+              <div class="flex gap-2">
+                <a href="{% url 'Edit Blog' blog.slug %}" 
+                  class="text-sky-500 hover:text-sky-400 transition-colors duration-200 text-xs">
+                  Edit
+                </a>
+                <button class="text-red-500 hover:text-red-400 transition-colors duration-200 text-xs"
+                  name="{{ blog.slug }}" id="delete">
+                  Delete
+                </button>
+              </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <!-- No Blogs Found Message -->
+      <div class="flex flex-col items-center justify-center py-12">
+        <div class="relative w-32 h-32 mb-6">
+          <div class="absolute inset-0 flex items-center justify-center">
+            <svg class="w-full h-full text-sky-400/30 animate-pulse" viewBox="0 0 200 200">
+              <path fill="currentColor" d="M100 0C44.8 0 0 44.8 0 100s44.8 100 100 100 100-44.8 100-100S155.2 0 100 0zm0 180c-44.2 0-80-35.8-80-80s35.8-80 80-80 80 35.8 80 80-35.8 80-80 80z"/>
+              <path fill="currentColor" d="M100 40c-33.1 0-60 26.9-60 60s26.9 60 60 60 60-26.9 60-60-26.9-60-60-60zm0 100c-22.1 0-40-17.9-40-40s17.9-40 40-40 40 17.9 40 40-17.9 40-40 40z"/>
+              <path fill="currentColor" d="M100 80c-11 0-20 9-20 20s9 20 20 20 20-9 20-20-9-20-20-20z"/>
+            </svg>
+            <div class="absolute inset-0 flex items-center justify-center">
+              <svg class="w-16 h-16 text-sky-400" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div class="text-center space-y-3">
+          <h2 class="text-xl font-semibold text-sky-300">No Blogs Found</h2>
+          <p class="text-sky-400/80 text-base max-w-sm mx-auto">
+            There are no blogs available yet.
+          </p>
+          {% if Auth_user.username == user.username %}
+          <a href="{% url 'Create Blog' %}" 
+            class="inline-flex items-center px-4 py-2 mt-2 text-sm font-medium text-sky-100 bg-sky-500/10 border border-sky-500/20 rounded-lg hover:bg-sky-500/20 transition-all duration-300">
+            <svg class="w-3.5 h-3.5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+            </svg>
+            Create Your First Blog
+          </a>
+          {% endif %}
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<script>
+  let image = document.getElementById("profile")
+  document.getElementById("profile_image").addEventListener("change",(e)=>{
+    const file = e.target.files[0]
+    if (file && file.type.startsWith("image/")){
+      let formdata = new FormData();
+      formdata.append("profile_img", file)
+      fetch("/upload/profile",{
+        method: "POST",
+        body:formdata,
+      }).then((res)=>res.json()).then((res)=>{
+        image.src = "../media/uploads/profile/"+res.filename
+      })
+    }
+  })
+
+  function ShowNotification(message) {
+    let div = document.createElement("div");
+    div.id = "notification";
+    div.className = "fixed top-10 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black/80 text-white p-4 rounded-lg border border-sky-500/20";
+    let h1 = document.createElement("h1");
+    h1.className = "font-semibold text-sky-400";
+    h1.innerText = message;
+    div.appendChild(h1);
+
+    setTimeout(() => {
+      document.body.appendChild(div);
+      setTimeout(() => {
+        document.body.removeChild(div);
+      }, 2000);
+    }, 10);
+  }
+
+  function deleteBlog(slug) {
+    try {
+      fetch(`/blogs/delete/${slug}`)
+        .then((res) => res.json())
+        .then((res) => {
+          if (res.status) {
+            window.location.reload();
+          } else {
+            ShowNotification(res.Message);
+          }
+        });
+    } catch (e) { }
+  }
+
+  try {
+    const deleteButton = document.querySelectorAll("#delete");
+    deleteButton.forEach((button) => {
+      button.addEventListener("click", (e) => {
+        let slug = e.target.name;
+        let div = document.createElement("div");
+        div.className = "fixed inset-0 bg-black/80 backdrop-blur-sm flex justify-center items-center z-50";
+        let div2 = document.createElement("div");
+        div2.className = "bg-black/40 backdrop-blur-sm p-6 rounded-lg border border-sky-500/20 w-96";
+        let h1 = document.createElement("h1");
+        h1.className = "text-center text-white mb-6";
+        let div3 = document.createElement("div");
+        div3.className = "flex justify-center gap-4";
+        let cancelBtn = document.createElement("button");
+        cancelBtn.className = "px-4 py-2 text-sky-400 border border-sky-500/20 rounded-lg hover:bg-sky-500/20 transition-all duration-300";
+        cancelBtn.innerText = "Cancel";
+        let confirmbtn = document.createElement("button");
+        confirmbtn.className = "px-4 py-2 text-red-400 border border-red-500/20 rounded-lg hover:bg-red-500/20 transition-all duration-300";
+        confirmbtn.innerText = "Confirm";
+
+        h1.innerText = "Are You Sure You Want to Delete This Blog?";
+        div3.appendChild(cancelBtn);
+        div3.appendChild(confirmbtn);
+        div2.appendChild(h1);
+        div2.appendChild(div3);
+        div.appendChild(div2);
+        document.body.appendChild(div);
+        cancelBtn.addEventListener("click", () => {
+          document.body.removeChild(div);
+        });
+        confirmbtn.addEventListener("click", (e) => {
+          deleteBlog(slug);
+        });
+      });
+    });
+  } catch (e) {
+    console.log("error: " + e.message);
+  }
+
+  try {
+    let following = document.querySelector(".following");
+    let follow = document.querySelector(".follow");
+    const urlPath = window.location.pathname;
+    const username = urlPath.split("/").pop();
+
+    follow.addEventListener("click", () => {
+      following.disabled = true;
+      following.classList.add("cursor-not-allowed");
+      fetch(`/follow/${username}`)
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.status) {
+            follower_count = document.getElementById("follower_count");
+            follower_count.innerText = parseInt(follower_count.innerText) + 1;
+            following.classList.remove("hidden");
+            follow.classList.add("hidden");
+            following.disabled = false;
+            following.classList.remove("cursor-not-allowed");
+          } else {
+            ShowNotification(`Error While Following: ${data.message}`);
+          }
+        })
+        .catch((err) => ShowNotification("Please Try Again Later"));
+    });
+
+    following.addEventListener("click", () => {
+      follow.disabled = true;
+      follow.classList.add("cursor-not-allowed");
+      fetch(`/unfollow/${username}`)
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.status) {
+            follower_count = document.getElementById("follower_count");
+            follower_count.innerText = parseInt(follower_count.innerText) - 1;
+            following.classList.add("hidden");
+            follow.classList.remove("hidden");
+            follow.disabled = false;
+            follow.classList.remove("cursor-not-allowed");
+          } else {
+            ShowNotification(`Error While Unfollowing: ${data.message}`);
+          }
+        });
+    });
+  } catch (err) { }
+</script>
+{% endblock %}
