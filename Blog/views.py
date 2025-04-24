@@ -150,7 +150,7 @@ def Login(request):
         username = request.POST.get("username")
         password = request.POST.get("password")
         if username is None or password is None:
-            return render(request, 'Auth/login.html',{"error":"All fields are required"})
+            return render(request, 'auth/login.html',{"error":"All fields are required"})
         else:
             try:
                 user = Blog_User.objects.get(username=username,password=password)
@@ -161,10 +161,10 @@ def Login(request):
                     return responce
                 else:
                     print("Error while fetching user")
-                    return render(request, 'Auth/login.html',{"error":"Please Try Again Later"})
+                    return render(request, 'auth/login.html',{"error":"Please Try Again Later"})
             except Exception as e:
                 print(e)
-                return render(request, 'Auth/login.html',{"error":"Invalid Username or Password"})
+                return render(request, 'auth/login.html',{"error":"Invalid Username or Password"})
     else:
         if request.COOKIES.get("Auth_token"):
             Auth_token = request.COOKIES.get("Auth_token")
@@ -172,7 +172,7 @@ def Login(request):
             if user:
                 print("user Found")
                 return redirect(f"profile/{user.username}")
-        return render(request, 'Auth/login.html',{"user":{"IsLoggedIn":True}})
+        return render(request, 'auth/login.html',{"user":{"IsLoggedIn":True}})
 
 @csrf_exempt
 def SignUp(request):
@@ -183,10 +183,10 @@ def SignUp(request):
         password2 = request.POST.get("confirm_password")
         print(username,email,password,password2)
         if username is None or email is None or password is None or password2 is None:
-            return render(request, 'Auth/signup.html',{"error":"All fields are required"})
+            return render(request, 'auth/signup.html',{"error":"All fields are required"})
         else:
             if password != password2:
-                return render(request, 'Auth/signup.html',{"error":"Password and Confirm Password doesn't match"})
+                return render(request, 'auth/signup.html',{"error":"Password and Confirm Password doesn't match"})
             else:
                 try:
                     user = Blog_User(username=username,email=email,password=password)
@@ -196,12 +196,12 @@ def SignUp(request):
                         return responce
                     except IntegrityError as e:
                         print(e)
-                        return render(request, 'Auth/signup.html',{"error":"Username or Email is Already Taken"})
+                        return render(request, 'auth/signup.html',{"error":"Username or Email is Already Taken"})
                 except Exception as e:
                     print(e)
-                    return render(request, 'Auth/signup.html',{"error":"Try Again Later"})
+                    return render(request, 'auth/signup.html',{"error":"Try Again Later"})
     else:
-        return render(request, 'Auth/signup.html')
+        return render(request, 'auth/signup.html')
     
 def SignOut(request):
     try:
