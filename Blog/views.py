@@ -46,9 +46,9 @@ def Home(request):
     if Auth_token is not None:
         Auth_user = validateToken(Auth_token)
         if Auth_user:
-            return render(request, 'Home/index.html',{"categories":categories,"blogs":blogs,"Auth_user":Auth_user,"user":{"IsLoggedIn":True}})
+            return render(request, 'home/index.html',{"categories":categories,"blogs":blogs,"Auth_user":Auth_user,"user":{"IsLoggedIn":True}})
         else:
-            return render(request, 'Home/index.html',{"categories":categories,"blogs":blogs,"user":{"IsLoggedIn":False}})
+            return render(request, 'home/index.html',{"categories":categories,"blogs":blogs,"user":{"IsLoggedIn":False}})
     else:
         return render(request, 'home/index.html',{"categories":categories,"blogs":blogs,"user":{"IsLoggedIn":False}})
 @csrf_exempt
