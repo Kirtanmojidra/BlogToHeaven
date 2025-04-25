@@ -365,7 +365,7 @@ function showReplyForm(commentId) {
         <form class="space-y-2">
             <div class="flex items-start gap-2">
                 <div class="w-6 h-6 rounded-full bg-black/40 backdrop-blur-sm border border-sky-500/20 overflow-hidden">
-                    <img src="/media/uploads/profile/{{ Auth_user.profile_img }}" alt="{{ Auth_user.username }}" class="w-full h-full object-cover">
+                {% cloudinary Auth_user.profile_img  format="jpg" width=120 height=80 crop="fill" class="w-full h-full object-cover" alt="{{ Auth_user.username }}" %}
                 </div>
                 <div class="flex-1">
                     <textarea 

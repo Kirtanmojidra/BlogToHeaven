@@ -66,6 +66,8 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'Blog.urls'
 
+import os
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -81,6 +83,7 @@ TEMPLATES = [
         },
     },
 ]
+TEMPLATES[0]['DIRS'] = [os.path.join(BASE_DIR, 'templates')]
 
 
 
@@ -194,23 +197,6 @@ QUILL_CONFIGS = {
                 "showSize": True,
                 "locale": {},
             },
-        },
-    },
-}
-
-
-
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'console': {'class': 'logging.StreamHandler'},
-    },
-    'loggers': {
-        'Blog.components.GoogleStorage': {
-            'handlers': ['console'],
-            'level': 'DEBUG',
-            'propagate': False,
         },
     },
 }

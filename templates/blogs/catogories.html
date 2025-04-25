@@ -8,7 +8,7 @@
         <div class="bg-black/40 backdrop-blur-sm rounded-lg shadow-lg border border-sky-500/20 p-4 mb-6">
             <div class="flex items-center gap-4">
                 <div class="w-12 h-12 bg-black/40 backdrop-blur-sm rounded-full border-2 border-sky-500/20 flex items-center justify-center">
-                    <img src="/media/{{ catogory.image }}" alt="{{ catogory.name }}" class="w-8 h-8">
+                    {% cloudinary catogory.image  format="jpg" width=120 height=80 crop="fill" class="w-8 h-8" alt="{{ catogory.name }}" %}
                 </div>
                 <div>
                     <h1 class="text-xl font-bold text-white">{{ catogory.name }}</h1>
@@ -42,11 +42,7 @@
             <div class="group bg-black border border-sky-500/30 rounded-lg overflow-hidden hover:border-sky-400/50 transition-all duration-300 hover:shadow-lg hover:shadow-sky-500/20">
                 <a href="{% url 'Blog_Details' blog.slug %}">
                   <div class="relative h-36 overflow-hidden">
-                    <img 
-                      class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500" 
-                      src="{{ blog.blog_img.url }}" 
-                      alt="{{ blog.title }}"
-                    />
+                    {% cloudinary blog.blog_img  format="jpg" width=120 height=80 crop="fill" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500" alt="{{ blog.title }}" %}
                     <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
                   </div>
                 </a>
