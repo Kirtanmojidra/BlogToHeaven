@@ -1,2 +1,7 @@
+#!/bin/bash
+
+# Install dependencies
 pip install -r requirements.txt
-python3.13.1 manage.py collectstatic --noinput
+
+# Collect static files using the correct Python version
+python3.10 manage.py collectstatic --noinput

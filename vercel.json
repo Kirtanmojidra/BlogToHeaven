@@ -6,7 +6,7 @@
             "use": "@vercel/python",
             "config": {
                 "maxLambdaSize": "15mb",
-                "runtime": "python3.13.1"
+                "runtime": "python3.10"  
             }
         },
         {
@@ -24,8 +24,8 @@
         },
         {
             "src": "/(.*)",
-            "dest": "Blog/wsgi.py"
+            "dest": "/Blog/wsgi.py"
         }
     ],
-    "outputDirectory": "ui/staticfiles"
+    "outputDirectory": "staticfiles"  
 }
