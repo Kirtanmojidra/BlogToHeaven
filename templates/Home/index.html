@@ -128,7 +128,7 @@
             <a href="{% url 'Catogories' cat.name %}" class="group relative overflow-hidden rounded-xl bg-gray-950 hover:bg-gray-900 transition-all duration-300 animate__animated animate__fadeIn border border-sky-400">
                 <div class="p-8 text-center">
                     <div class="mb-4 text-sky-400 group-hover:scale-110 transition-transform duration-300 flex justify-center">
-                        {% cloudinary cat.image  format="jpg" width=120 height=80 crop="fill" class="h-10 w-10" alt="{{ cat.title }}" %}
+                        {% cloudinary cat.image  format="jpg" width=120 height=80 crop="fill" class="h-10 w-10" alt="{{ cat.name }}" %}
                     </div>
                     <h3 class="text-xl font-semibold text-white mb-2 group-hover:text-sky-400 transition-colors duration-300">{{ cat.name }}</h3>
                 </div>
