@@ -146,7 +146,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-NPM_BIN_PATH = "/usr/bin/"
+NPM_BIN_PATH = "/usr/bin/npm"
+#NPM_BIN_PATH = r'C:\Program Files\nodejs\npm.cmd'
 
 
 STATIC_URL = 'static/'
@@ -186,7 +187,7 @@ QUILL_CONFIGS = {
                 ["clean"],
             ],
             "imageCompressor": {
-                "quality": 0.8,
+                "quality": 0.1,
                 "maxWidth": 2000,
                 "maxHeight": 2000,
                 "imageType": "image/jpeg",

@@ -5,6 +5,7 @@
 <head>
     {% tailwind_css %}
     <meta charset="UTF-8">
+    <link rel ="icon" href="/static/favicon.png" type="image/png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up | BlogToHaven</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
@@ -104,10 +105,14 @@
                         <input 
                             type="password" 
                             name="password" 
-                            class="w-full pl-9 pr-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-white/20 transition-all duration-200 text-sm group-hover:bg-white/10" 
+                            id="password"
+                            class="w-full pl-9 pr-10 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-white/20 transition-all duration-200 text-sm group-hover:bg-white/10" 
                             placeholder="Create a password" 
                             value="{{ request.POST.password}}"
                         >
+                        <button type="button" class="absolute inset-y-0 right-0 pr-3 flex items-center" onclick="togglePassword('password')">
+                            <i class="fas fa-eye text-gray-400 text-sm hover:text-white transition-colors duration-200"></i>
+                        </button>
                     </div>
                 </div>
 
@@ -121,10 +126,14 @@
                         <input 
                             type="password" 
                             name="confirm_password" 
-                            class="w-full pl-9 pr-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-white/20 transition-all duration-200 text-sm group-hover:bg-white/10" 
+                            id="confirm_password"
+                            class="w-full pl-9 pr-10 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-white/20 transition-all duration-200 text-sm group-hover:bg-white/10" 
                             placeholder="Confirm your password" 
                             value="{{ request.POST.confirm_password}}"
                         >
+                        <button type="button" class="absolute inset-y-0 right-0 pr-3 flex items-center" onclick="togglePassword('confirm_password')">
+                            <i class="fas fa-eye text-gray-400 text-sm hover:text-white transition-colors duration-200"></i>
+                        </button>
                     </div>
                 </div>
 
@@ -186,5 +195,22 @@
             </div>
         </div>
     </div>
+
+    <script>
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            const icon = input.nextElementSibling.querySelector('i');
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+    </script>
 </body>
 </html>

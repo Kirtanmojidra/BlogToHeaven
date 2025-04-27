@@ -20,8 +20,8 @@ class Categories(models.Model):
         db_table = 'blog_categories'  
 
 class Blog_User(models.Model):
-    username = models.CharField(max_length=100,unique=True)
-    email = models.EmailField(max_length=100,unique=True)
+    username = models.CharField(max_length=100,unique=True,blank=False,null=False)
+    email = models.EmailField(max_length=100,unique=True,blank=False,null=False)
     password = models.CharField(max_length=100)
     profile_img = CloudinaryField('profile',null=True)
     bio = models.TextField(max_length=500, blank=True)

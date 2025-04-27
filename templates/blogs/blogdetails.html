@@ -2,20 +2,103 @@
 {% load cloudinary %}
 {% block title %} {{ blog.title }} | BlogToHaven {% endblock %}
 {% load static %}
+
+{% block head %}
+<style>
+.blog-image-wrapper {
+    width: 100%;
+    max-width: 300px;
+    height: 200px;
+    overflow: hidden;
+    border-radius: 0.5rem;
+    border: 1px solid rgba(56, 189, 248, 0.2);
+}
+
+.blog-image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 3px solid rgba(56, 189, 248, 0.3);
+    border-radius: 50%;
+    border-top-color: #38bdf8;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.loading-text {
+    color: #38bdf8;
+    margin-top: 1rem;
+    font-size: 1.1rem;
+}
+
+@media (max-width: 768px) {
+    .blog-image-wrapper {
+        max-width: 100%;
+        height: 250px;
+    }
+}
+
+@keyframes typewriter {
+    0% {
+        max-width: 0%;
+    }
+    50% {
+        max-width: 100%;
+    }
+    100% {
+        max-width: 100%;
+    }
+}
+
+body {
+    background-color: #000000;
+}
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="min-h-screen pt-16 bg-black">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Loading Overlay -->
+        <div id="loading-overlay" class="loading-overlay hidden">
+            <div class="text-center">
+                <div class="loading-spinner"></div>
+                <div class="loading-text">Loading...</div>
+            </div>
+        </div>
+
         <!-- Blog Header -->
-        <div class="bg-black/40 backdrop-blur-sm rounded-xl shadow-lg border border-sky-500/20 p-4 mb-6">
-            <div class="flex items-center justify-between">
-                <h1 class="pb-2 text-sky-400/90 text-md">Blog / {{ blog.slug }}</h1>
-                <h1 class="pb-2 text-sky-400/90 text-md">Date: {{ blog.created_At | date:"M d, Y" }}</h1>
+        <div class="bg-black/40 backdrop-blur-sm rounded-xl shadow-lg border border-sky-500/20 p-4 mb-6 relative z-10">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4">
+                <h1 class="text-sky-400/90 text-md">Blog / {{ blog.slug }}</h1>
+                <h1 class="text-sky-400/90 text-md">Date: {{ blog.created_At | date:"M d, Y" }}</h1>
             </div>
             <div class="flex flex-col md:flex-row items-start gap-6">
-                <div class="w-full md:w-1/4">
-                    {% cloudinary blog.blog_img  format="jpg" width=120 height=80 crop="fill" alt="{{ blog.title }}" class="w-full h-48 object-cover rounded-lg border border-sky-500/20" %}
+                <div class="blog-image-wrapper">
+                    {% cloudinary blog.blog_img format="jpg" width=400 height=300 crop="fill" alt="{{ blog.title }}" %}
                 </div>
-                <div class="flex-1">
+                <div class="flex-1 w-full">
                     <div class="flex items-center gap-2 mb-3">
                         <span class="px-2 py-1 bg-sky-500/10 text-sky-400 rounded-full text-xs border border-sky-500/20">{{ blog.categories.name }}</span>
                     </div>
@@ -24,13 +107,12 @@
                         <div class="flex items-center gap-2">
                             <div class="w-8 h-8 rounded-full bg-black/40 backdrop-blur-sm border border-sky-500/20 overflow-hidden">
                                 {% cloudinary blog.author.profile_img  format="jpg" width=120 height=80 crop="fill" alt="{{ blog.author.username }}" class="w-full h-full object-cover" %}
-                                
                             </div>
                             <span class="text-sky-400/90 text-sm">{{ blog.author.username }}</span>
                         </div>
                         <span class="text-sky-400/90 text-sm">{{ blog.created_at|date:"M d, Y" }}</span>
                     </div>
-                    <div class="flex items-center gap-3">
+                    <div class="flex flex-wrap items-center gap-3">
                         <button class="flex items-center gap-1.5 px-3 py-1.5 bg-sky-500/10 text-sky-400 rounded-lg border border-sky-500/20 hover:bg-sky-500/20 transition-all duration-300 text-sm">
                             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                 <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path>
@@ -56,7 +138,7 @@
         </div>
 
         <!-- Blog Content -->
-        <div class="bg-black/40 backdrop-blur-sm rounded-xl shadow-lg border border-sky-500/20 p-6 mb-6">
+        <div class="bg-black/40 backdrop-blur-sm rounded-xl shadow-lg border border-sky-500/20 p-6 mb-6 z-10 overflow-hidden">
             <div class="prose prose-invert max-w-none">
                 <style>
                     .prose pre {
@@ -138,7 +220,7 @@
         </div>
 
         <!-- Comments Section -->
-        <div class="bg-black/40 backdrop-blur-sm rounded-xl shadow-lg border border-sky-500/20 p-6">
+        <div class="bg-black/40 backdrop-blur-sm rounded-xl shadow-lg border border-sky-500/20 p-6 z-10">
             <h2 class="text-xl font-bold text-sky-400 mb-4">Comments</h2>
             
             <!-- Comment Form -->
@@ -147,7 +229,6 @@
                     <div class="flex items-start gap-3">
                         <div class="w-8 h-8 rounded-full bg-black/40 backdrop-blur-sm border border-sky-500/20 overflow-hidden">
                             {% cloudinary Auth_user.profile_img  format="jpg" width=120 height=80 crop="fill"  alt="{{ Auth_user.username }}" class="w-full h-full object-cover" %} 
-                            
                         </div>
                         <div class="flex-1">
                             <textarea 
@@ -169,7 +250,7 @@
                 </form>
             </div>
 
-            <!-- Add this after the comment form -->
+            <!-- Comment Message -->
             <div id="comment-message" class="hidden mb-4 p-3 rounded-lg text-sm"></div>
 
             <!-- Comments List -->
@@ -185,7 +266,7 @@
                             </div>
                             <div class="flex-1">
                                 <div class="bg-black/40 backdrop-blur-sm rounded-lg p-3 border border-sky-500/20">
-                                    <div class="flex items-center justify-between mb-1.5">
+                                    <div class="flex justify-between mb-1.5 z-auto">
                                         <span class="text-sky-400/90 text-sm">{{ comment.user.username }}</span>
                                         <span class="text-sky-400/90 text-xs">{{ comment.created_at|date:"M d, Y" }}</span>
                                     </div>
@@ -193,14 +274,14 @@
                                     <div class="mt-2 flex items-center gap-3">
                                         <button 
                                             onclick="showReplyForm('{{ comment.id }}')" 
-                                            class="text-sky-400/90 text-xs hover:text-sky-300 transition-colors duration-200"
+                                            class="px-2 py-1 bg-sky-500/10 text-sky-400 rounded-lg border border-sky-500/20 hover:bg-sky-500/20 transition-all duration-300 text-xs"
                                         >
                                             Reply
                                         </button>
                                         {% if comment.replies.count > 0 %}
                                         <button 
                                             onclick="toggleReplies('{{ comment.id }}')" 
-                                            class="text-sky-400/90 text-xs hover:text-sky-300 transition-colors duration-200 flex items-center gap-1"
+                                            class="px-2 py-1 bg-sky-500/10 text-sky-400 rounded-lg border border-sky-500/20 hover:bg-sky-500/20 transition-all duration-300 text-xs flex items-center gap-1"
                                         >
                                             <span class="replies-count">{{ comment.replies.count }}</span>
                                             <span class="replies-text">replies</span>
@@ -223,7 +304,7 @@
                                         </div>
                                         <div class="flex-1">
                                             <div class="bg-black/40 backdrop-blur-sm rounded-lg p-2 border border-sky-500/20">
-                                                <div class="flex items-center justify-between mb-1">
+                                                <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-1">
                                                     <span class="text-sky-400/90 text-xs">{{ reply.user.username }}</span>
                                                     <span class="text-sky-400/90 text-xs">{{ reply.created_at|date:"M d, Y" }}</span>
                                                 </div>
@@ -244,7 +325,20 @@
 </div>
 
 <script>
+function showLoading(message = 'Loading...') {
+    const overlay = document.getElementById('loading-overlay');
+    const loadingText = overlay.querySelector('.loading-text');
+    loadingText.textContent = message;
+    overlay.classList.remove('hidden');
+}
+
+function hideLoading() {
+    const overlay = document.getElementById('loading-overlay');
+    overlay.classList.add('hidden');
+}
+
 function likePost(slug) {
+    showLoading('Updating like...');
     fetch(`/like/${slug}`, {
         method: 'POST',
         headers: {
@@ -253,17 +347,14 @@ function likePost(slug) {
     })
     .then(response => response.json())
     .then(data => {
-        console.log(data.removed)
         if (data.status) {
             const likeButton = document.querySelector(`button[onclick="likePost('${slug}')"]`);
             const likeCount = document.getElementById('like-count');
             
             if (data.removed) {
-                // User unliked the post
                 likeButton.classList.remove('bg-sky-500/20', 'text-sky-300');
                 likeCount.textContent = `${parseInt(likeCount.textContent) - 1} Likes`;
             } else {
-                // User liked the post
                 likeButton.classList.add('bg-sky-500/20', 'text-sky-300');
                 likeCount.textContent = `${parseInt(likeCount.textContent) + 1} Likes`;
             }
@@ -279,6 +370,9 @@ function likePost(slug) {
     })
     .catch(error => {
         console.error('Error:', error);
+    })
+    .finally(() => {
+        hideLoading();
     });
 }
 
@@ -303,6 +397,7 @@ document.getElementById('comment-form').addEventListener('submit', function(e) {
     const content = document.getElementById('comment-content').value.trim();
     if (!content) return;
 
+    showLoading('Posting comment...');
     const messageDiv = document.getElementById('comment-message');
     messageDiv.className = 'mb-4 p-3 rounded-lg text-sm';
     messageDiv.textContent = 'Posting comment...';
@@ -322,31 +417,36 @@ document.getElementById('comment-form').addEventListener('submit', function(e) {
     })
     .then(response => response.json())
     .then(data => {
+        hideLoading()
         if (data.status) {
             messageDiv.textContent = 'Comment posted successfully!';
             messageDiv.classList.remove('bg-red-500/10', 'text-red-400');
             messageDiv.classList.add('bg-sky-500/10', 'text-sky-400');
-            // Clear the form
             document.getElementById('comment-content').value = '';
-            // Refresh comments after a short delay
             setTimeout(() => {
                 location.reload();
             }, 1000);
         } else {
-            if (data.Message === "Please Login") {
-                window.location.href = "/login";
+            if (data.message === "Please Login") {
+                messageDiv.textContent = data.message || 'Login To Comment';
+                messageDiv.classList.remove('bg-sky-500/10', 'text-sky-400');
+                messageDiv.classList.add('bg-red-500/10', 'text-red-400');
             } else {
-                messageDiv.textContent = data.Message || 'Error posting comment. Please try again.';
+                messageDiv.textContent = data.message || 'Error posting comment. Please try again.';
                 messageDiv.classList.remove('bg-sky-500/10', 'text-sky-400');
                 messageDiv.classList.add('bg-red-500/10', 'text-red-400');
             }
         }
     })
     .catch(error => {
+        hideLoading()
         console.error('Error:', error);
         messageDiv.textContent = 'An error occurred. Please try again.';
         messageDiv.classList.remove('bg-sky-500/10', 'text-sky-400');
         messageDiv.classList.add('bg-red-500/10', 'text-red-400');
+    })
+    .finally(() => {
+        hideLoading();
     });
 });
 
@@ -365,7 +465,7 @@ function showReplyForm(commentId) {
         <form class="space-y-2">
             <div class="flex items-start gap-2">
                 <div class="w-6 h-6 rounded-full bg-black/40 backdrop-blur-sm border border-sky-500/20 overflow-hidden">
-                {% cloudinary Auth_user.profile_img  format="jpg" width=120 height=80 crop="fill" class="w-full h-full object-cover" alt="{{ Auth_user.username }}" %}
+                {% cloudinary Auth_user.profile_img format="jpg" width=120 height=80 crop="fill" class="w-full h-full object-cover" alt="{{ Auth_user.username }}" %}
                 </div>
                 <div class="flex-1">
                     <textarea 
@@ -393,6 +493,7 @@ function showReplyForm(commentId) {
         const content = this.querySelector('textarea').value.trim();
         if (!content) return;
 
+        showLoading('Posting reply...');
         const submitButton = this.querySelector('button[type="submit"]');
         const originalText = submitButton.textContent;
         submitButton.textContent = 'Posting...';
@@ -411,6 +512,7 @@ function showReplyForm(commentId) {
         })
         .then(response => response.json())
         .then(data => {
+            hideLoading()
             if (data.status) {
                 submitButton.textContent = 'Posted!';
                 submitButton.classList.add('bg-sky-500/20', 'text-sky-300');
@@ -418,10 +520,12 @@ function showReplyForm(commentId) {
                     location.reload();
                 }, 1000);
             } else {
-                if (data.Message === "Please Login") {
-                    window.location.href = "/login";
+                if (data.message === "Please Login") {
+                    submitButton.textContent = data.message;
+                    submitButton.classList.remove('bg-sky-500/10','text-sky-400');
+                    submitButton.classList.add('bg-red-500/20', 'text-red-400');
                 } else {
-                    submitButton.textContent = 'Error';
+                    submitButton.textContent = data.message;
                     submitButton.classList.add('bg-red-500/20', 'text-red-400');
                     setTimeout(() => {
                         submitButton.textContent = originalText;
@@ -432,6 +536,7 @@ function showReplyForm(commentId) {
             }
         })
         .catch(error => {
+            hideLoading()
             console.error('Error:', error);
             submitButton.textContent = 'Error';
             submitButton.classList.add('bg-red-500/20', 'text-red-400');
@@ -440,6 +545,9 @@ function showReplyForm(commentId) {
                 submitButton.classList.remove('bg-red-500/20', 'text-red-400');
                 submitButton.disabled = false;
             }, 2000);
+        })
+        .finally(() => {
+            hideLoading();
         });
     });
 }
@@ -457,5 +565,10 @@ function toggleReplies(commentId) {
         arrow.classList.remove('rotate-180');
     }
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Keep other functionality but remove loading message code
+    // ... existing code ...
+});
 </script>
 {% endblock %}

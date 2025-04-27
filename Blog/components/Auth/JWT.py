@@ -6,12 +6,22 @@ load_dotenv()
 
 def encode(data):
     try:
-        return jwt.encode(data, os.getenv("JWT_SECRET"), algorithm="HS256")
+        secret = os.getenv("JWT_SECRET")
+        if not secret:
+            raise ValueError("JWT_SECRET not found in environment variables")
+        return jwt.encode(data, secret.encode('utf-8'), algorithm="HS256")
     except Exception as e:
-        print(e)
+        print(f"JWT Encoding Error: {e}")
+        return None
 
 def decode(token):
     try:
-        return jwt.decode(token, os.getenv("JWT_SECRET"), algorithms=["HS256"])
+        if not token:
+            return None
+        secret = os.getenv("JWT_SECRET")
+        if not secret:
+            raise ValueError("JWT_SECRET not found in environment variables")
+        return jwt.decode(token, secret.encode('utf-8'), algorithms=["HS256"])
     except Exception as e:
-        print(e)
+        print(f"JWT Decoding Error: {e}")
+        return None

@@ -4,6 +4,7 @@
   <head>
     {% tailwind_css %}
     <meta charset="UTF-8" />
+    <link rel ="icon" href="/static/favicon.png" type="image/png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login | BlogToHaven</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
@@ -61,20 +62,20 @@
 
           <!-- Email Input -->
           <div class="space-y-1 slide-in" style="animation-delay: 0.4s">
-            <label class="block text-sm font-medium text-gray-300">Email Address</label>
+            <label class="block text-sm font-medium text-gray-300">Username</label>
             <div class="relative group">
-              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <i class="fas fa-envelope text-gray-400 text-sm group-hover:text-white transition-colors duration-200"></i>
-              </div>
-              <input
-                type="text"
-                name="username"
-                placeholder="Enter your email"
-                class="w-full pl-9 pr-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-white/20 transition-all duration-200 text-sm group-hover:bg-white/10"
-                value="{{ request.POST.username}}"
-              />
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <i class="fas fa-user text-gray-400 text-sm group-hover:text-white transition-colors duration-200"></i>
+                </div>
+                <input 
+                    type="text" 
+                    name="username" 
+                    class="w-full pl-9 pr-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-white/20 transition-all duration-200 text-sm group-hover:bg-white/10" 
+                    placeholder="Enter Your username" 
+                    value="{{ request.POST.username}}"
+                >
             </div>
-          </div>
+        </div>
 
           <!-- Password Input -->
           <div class="space-y-1 slide-in" style="animation-delay: 0.5s">
@@ -86,10 +87,14 @@
               <input
                 type="password"
                 name="password"
+                id="password"
                 placeholder="Enter your password"
-                class="w-full pl-9 pr-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-white/20 transition-all duration-200 text-sm group-hover:bg-white/10"
+                class="w-full pl-9 pr-10 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-white/20 transition-all duration-200 text-sm group-hover:bg-white/10"
                 value="{{ request.POST.password}}"
               />
+              <button type="button" class="absolute inset-y-0 right-0 pr-3 flex items-center" onclick="togglePassword('password')">
+                <i class="fas fa-eye text-gray-400 text-sm hover:text-white transition-colors duration-200"></i>
+              </button>
             </div>
           </div>
 
@@ -151,5 +156,22 @@
         </div>
       </div>
     </div>
+
+    <script>
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            const icon = input.nextElementSibling.querySelector('i');
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+    </script>
   </body>
 </html>

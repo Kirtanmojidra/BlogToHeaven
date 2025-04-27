@@ -4,6 +4,80 @@
 {% block title %}Blogs | BlogToHaven{% endblock %}
 
 {% block content %}
+<style>
+  /* Loading Overlay */
+  .loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    backdrop-filter: blur(4px);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+  }
+
+  .loading-overlay.active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  /* Custom Loading Spinner */
+  .loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 3px solid rgba(56, 189, 248, 0.3);
+    border-radius: 50%;
+    border-top-color: rgb(56, 189, 248);
+    animation: spin 1s ease-in-out infinite;
+    margin-bottom: 1rem;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  /* Loading Message */
+  .loading-message {
+    color: rgb(56, 189, 248);
+    text-align: center;
+    font-size: 1rem;
+    max-width: 80%;
+    margin-top: 1rem;
+    opacity: 0;
+    animation: fadeIn 0.5s ease-in-out forwards;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes typewriter {
+    0% {
+      max-width: 0%;
+    }
+    50% {
+      max-width: 100%;
+    }
+    100% {
+      max-width: 100%;
+    }
+  }
+  
+  body {
+    background-color: #000000;
+  }
+</style>
+
+
 <div class="min-h-screen bg-black pt-16">
   <!-- Hero Section with Search -->
   <div class="container mx-auto px-4 py-6 max-w-7xl">
@@ -46,7 +120,7 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="search-result">
       {% for blog in blogs %}
       <div class="group bg-black border border-sky-500/30 rounded-lg overflow-hidden hover:border-sky-400/50 transition-all duration-300 hover:shadow-lg hover:shadow-sky-500/20">
-        <a href="{% url 'Blog_Details' blog.slug %}">
+        <a href="{% url 'Blog_Details' blog.slug %}" class="loading-trigger">
           <div class="relative h-36 overflow-hidden">
             {% cloudinary blog.blog_img  format="jpg" width=120 height=80 crop="fill" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500" alt="{{ blog.title }}" %}
             <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
@@ -63,14 +137,14 @@
             <span class="mx-2">•</span>
             <span>{{ blog.created_At|date:"M d, Y" }}</span>
           </div>
-          <a href="{% url 'Blog_Details' blog.slug %}">
+          <a href="{% url 'Blog_Details' blog.slug %}" class="loading-trigger">
             <h3 class="text-base font-semibold text-sky-300 mb-2 min-h-[3.5rem] line-clamp-2 group-hover:text-sky-400 transition-colors duration-200">
               {{ blog.title }}
             </h3>
           </a>
           <a 
             href="{% url 'Blog_Details' blog.slug %}" 
-            class="inline-flex items-center text-sky-500 hover:text-sky-400 transition-colors duration-200 text-xs"
+            class="inline-flex items-center text-sky-500 hover:text-sky-400 transition-colors duration-200 text-xs loading-trigger"
           >
             Read more
             <svg class="w-3 h-3 ml-1 transform group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -85,6 +159,7 @@
 </div>
 
 <script>
+  // Existing search functionality
   let debounceTimeout;
   let controller;
 
@@ -101,9 +176,9 @@
         const div = document.createElement('div');
         div.className = 'group bg-black border border-sky-500/30 rounded-lg overflow-hidden hover:border-sky-400/50 transition-all duration-300 hover:shadow-lg hover:shadow-sky-500/20';
         div.innerHTML = `
-          <a href="/blogs/${blog.slug}">
+          <a href="/blogs/${blog.slug}" class="loading-trigger">
             <div class="relative h-36 overflow-hidden">
-              {% cloudinary blog.blog_img  format="jpg" width=120 height=80 crop="fill" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500" alt="{{ blog.title }}" %}
+              <img src="${blog.blog_img}" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500" alt="${blog.title}">
               <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
             </div>
           </a>
@@ -118,14 +193,14 @@
               <span class="mx-2">•</span>
               <span>${blogDate}</span>
             </div>
-            <a href="/blogs/${blog.slug}">
+            <a href="/blogs/${blog.slug}" class="loading-trigger">
               <h3 class="text-base font-semibold text-sky-300 mb-2 min-h-[3.5rem] line-clamp-2 group-hover:text-sky-400 transition-colors duration-200">
                 ${blog.title}
               </h3>
             </a>
             <a 
               href="/blogs/${blog.slug}" 
-              class="inline-flex items-center text-sky-500 hover:text-sky-400 transition-colors duration-200 text-xs"
+              class="inline-flex items-center text-sky-500 hover:text-sky-400 transition-colors duration-200 text-xs loading-trigger"
             >
               Read more
               <svg class="w-3 h-3 ml-1 transform group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">

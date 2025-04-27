@@ -2,6 +2,85 @@
 {% load static %}
 {% load cloudinary %}
 {% block content %}
+<style>
+  /* Loading Overlay */
+  .loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    backdrop-filter: blur(4px);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+  }
+
+  .loading-overlay.active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  /* Custom Loading Spinner */
+  .loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 3px solid rgba(56, 189, 248, 0.3);
+    border-radius: 50%;
+    border-top-color: rgb(56, 189, 248);
+    animation: spin 1s ease-in-out infinite;
+    margin-bottom: 1rem;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  /* Loading Message */
+  .loading-message {
+    color: rgb(56, 189, 248);
+    text-align: center;
+    font-size: 1rem;
+    max-width: 80%;
+    margin-top: 1rem;
+    opacity: 0;
+    animation: fadeIn 0.5s ease-in-out forwards;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes typewriter {
+    0% {
+      max-width: 0%;
+    }
+    50% {
+      max-width: 100%;
+    }
+    100% {
+      max-width: 100%;
+    }
+  }
+  
+  body {
+    background-color: #000000;
+  }
+</style>
+
+<!-- Loading Overlay -->
+<div id="loadingOverlay" class="loading-overlay">
+  <div class="loading-spinner"></div>
+  <div id="loadingMessage" class="loading-message"></div>
+</div>
+
 <section id="hero" class="min-h-screen pt-16 flex justify-center w-full items-center bg-black overflow-hidden">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center">
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 py-16">
@@ -17,10 +96,10 @@
                   Discover thought-provoking articles, expert insights, and trending topics from our community of passionate writers.
               </p>
               <div class="flex justify-center flex-wrap gap-4">
-                  <a href="{% url 'Blogs' %}" class="px-8 py-3 bg-sky-500/10 text-sky-400 rounded-full hover:bg-sky-500/20 hover:shadow-lg hover:shadow-sky-500/20 transition-all duration-300 border border-sky-500/20">
+                  <a href="{% url 'Blogs' %}" class="px-8 py-3 bg-sky-500/10 text-sky-400 rounded-full hover:bg-sky-500/20 hover:shadow-lg hover:shadow-sky-500/20 transition-all duration-300 border border-sky-500/20 loading-trigger">
                       Start Reading
                   </a>
-                  <a href="{% url 'Login' %}" class="px-8 py-3 border border-sky-500/30 text-sky-400 rounded-full hover:bg-sky-500/10 hover:text-sky-300 hover:shadow-lg hover:shadow-sky-500/20 transition-all duration-300">
+                  <a href="{% url 'Login' %}" class="px-8 py-3 border border-sky-500/30 text-sky-400 rounded-full hover:bg-sky-500/10 hover:text-sky-300 hover:shadow-lg hover:shadow-sky-500/20 transition-all duration-300 loading-trigger">
                       Start Writing
                   </a>
               </div>
@@ -83,7 +162,7 @@
                   <div class="flex items-center gap-2 mb-2">
                       <span class="px-2 py-1 bg-sky-500/10 text-sky-400 rounded-full text-xs border border-sky-500/20">{{ blog.categories.name }}</span>
                   </div>
-                  <a href="{% url 'Blog_Details' blog.slug %}" class="cursor-pointer">
+                  <a href="{% url 'Blog_Details' blog.slug %}" class="cursor-pointer loading-trigger">
                       <h3 class="text-base font-semibold text-sky-300 mb-2 min-h-[3.5rem] line-clamp-2 group-hover:text-sky-400 transition-colors duration-200">{{ blog.title }}</h3>
                   </a>
                   <div class="flex items-center justify-between">
@@ -93,7 +172,7 @@
                           </div>
                           <span class="text-sky-400/90 text-sm">{{ blog.author.username }}</span>
                       </div>
-                      <a href="{% url 'Blog_Details' blog.slug %}" class="text-sky-500 hover:text-sky-400 transition-colors duration-200 text-xs">
+                      <a href="{% url 'Blog_Details' blog.slug %}" class="text-sky-500 hover:text-sky-400 transition-colors duration-200 text-xs loading-trigger">
                           Read more →
                       </a>
                   </div>
@@ -104,7 +183,7 @@
 
       <!-- View All Button -->
       <div class="text-center mt-12">
-          <a href="{% url 'Blogs' %}" class="inline-block px-8 py-3 bg-sky-500/10 text-sky-400 rounded-full hover:bg-sky-500/20 hover:shadow-lg hover:shadow-sky-500/20 transition-all duration-300 border border-sky-500/20">
+          <a href="{% url 'Blogs' %}" class="inline-block px-8 py-3 bg-sky-500/10 text-sky-400 rounded-full hover:bg-sky-500/20 hover:shadow-lg hover:shadow-sky-500/20 transition-all duration-300 border border-sky-500/20 loading-trigger">
               View All Articles
           </a>
       </div>
@@ -125,7 +204,7 @@
       <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 justify-center" id="categories">
           <!-- Technology -->
            {% for cat in categories %}
-            <a href="{% url 'Catogories' cat.name %}" class="group relative overflow-hidden rounded-xl bg-gray-950 hover:bg-gray-900 transition-all duration-300 animate__animated animate__fadeIn border border-sky-400">
+            <a href="{% url 'Catogories' cat.name %}" class="group relative overflow-hidden rounded-xl bg-gray-950 hover:bg-gray-900 transition-all duration-300 animate__animated animate__fadeIn border border-sky-400 loading-trigger">
                 <div class="p-8 text-center">
                     <div class="mb-4 text-sky-400 group-hover:scale-110 transition-transform duration-300 flex justify-center">
                         {% cloudinary cat.image  format="jpg" width=120 height=80 crop="fill" class="h-10 w-10" alt="categoty" %}
@@ -137,4 +216,11 @@
           {% endfor %}
   </div>
 </section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Keep other functionality but remove loading message code
+    // ... existing code ...
+  });
+</script>
 {% endblock%}

@@ -25,10 +25,71 @@
       body {
         background-color: #000000;
       }
+
+      /* Loading Overlay */
+      .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        backdrop-filter: blur(4px);
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+      }
+
+      .loading-overlay.active {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      /* Custom Loading Spinner */
+      .loading-spinner {
+        width: 50px;
+        height: 50px;
+        border: 3px solid rgba(56, 189, 248, 0.3);
+        border-radius: 50%;
+        border-top-color: rgb(56, 189, 248);
+        animation: spin 1s ease-in-out infinite;
+        margin-bottom: 1rem;
+      }
+
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+
+      /* Loading Message */
+      .loading-message {
+        color: rgb(56, 189, 248);
+        text-align: center;
+        font-size: 1rem;
+        max-width: 80%;
+        margin-top: 1rem;
+        opacity: 0;
+        animation: fadeIn 0.5s ease-in-out forwards;
+      }
+
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
     </style>
   </head>
 
   <body class="bg-black overflow-auto">
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+      <div class="loading-spinner"></div>
+      <div id="loadingMessage" class="loading-message"></div>
+    </div>
+
     {% include 'blogs/navbar.html' %} {% block content %} {% endblock %}
 
     <footer id="footer" class="bg-black/80 backdrop-blur-2xl pt-20 pb-10">
@@ -75,11 +136,10 @@
               <div class="animate__animated animate__fadeIn animate__delay-2s">
                   <h4 class="text-lg font-semibold text-sky-400 mb-6">Categories</h4>
                   <ul class="space-y-4">
-                      <li><a href="#" class="text-gray-400 hover:text-sky-400 transition-colors">Technology</a></li>
-                      <li><a href="#" class="text-gray-400 hover:text-sky-400 transition-colors">Design</a></li>
-                      <li><a href="#" class="text-gray-400 hover:text-sky-400 transition-colors">Development</a></li>
-                      <li><a href="#" class="text-gray-400 hover:text-sky-400 transition-colors">UI/UX</a></li>
-                      <li><a href="#" class="text-gray-400 hover:text-sky-400 transition-colors">DevOps</a></li>
+                    {% for catogory in categories %}
+                        <li><a href="{% url 'Catogories' catogory.name %}" class="text-gray-400 hover:text-sky-400 transition-colors">{{ catogory.name }}</a></li>
+                    {% endfor %}
+                      
                   </ul>
               </div>
 
@@ -112,4 +172,90 @@
       </div>
   </footer>
   </body>
+  <script>
+    // Loading messages
+    const loadingMessages = [
+      "Brewing your digital coffee...",
+      "Summoning the content wizards...",
+      "Polishing the pixels...",
+      "Downloading more RAM...",
+      "Teaching AI to write better...",
+      "Counting to infinity...",
+      "Convincing the server to work...",
+      "Making your experience awesome...",
+      "Loading your next favorite read...",
+      "Preparing the digital feast...",
+      "Unleashing the power of words...",
+      "Connecting the dots...",
+      "Making magic happen...",
+      "Preparing your mind-blowing content...",
+      "Almost there, just a few more bits...",
+      "Warming up the creative engines...",
+      "Loading your inspiration...",
+      "Preparing the perfect reading experience...",
+      "Gathering the best stories for you...",
+      "Making everything just right..."
+    ];
+
+    let messageInterval;
+    let currentMessageIndex = 0;
+
+    function getNextMessage() {
+      currentMessageIndex = (currentMessageIndex + 1) % loadingMessages.length;
+      return loadingMessages[currentMessageIndex];
+    }
+
+    function updateLoadingMessage() {
+      const messageElement = document.getElementById('loadingMessage');
+      messageElement.style.opacity = '0';
+      
+      setTimeout(() => {
+        messageElement.textContent = getNextMessage();
+        messageElement.style.opacity = '1';
+      }, 500);
+    }
+
+    // Loading state management
+    function showLoading() {
+      const overlay = document.getElementById('loadingOverlay');
+      const messageElement = document.getElementById('loadingMessage');
+      
+      // Show initial random message
+      currentMessageIndex = Math.floor(Math.random() * loadingMessages.length);
+      messageElement.textContent = loadingMessages[currentMessageIndex];
+      
+      // Start changing messages every 2 seconds
+      messageInterval = setInterval(updateLoadingMessage, 2000);
+      
+      overlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function hideLoading() {
+      const overlay = document.getElementById('loadingOverlay');
+      clearInterval(messageInterval);
+      overlay.classList.remove('active');
+      document.body.style.overflow = 'auto';
+    }
+
+    // Add loading state to specific elements
+    document.addEventListener('DOMContentLoaded', function() {
+      // Handle navigation links
+      document.querySelectorAll('.loading-trigger').forEach(element => {
+        element.addEventListener('click', function(e) {
+          showLoading();
+        });
+      });
+
+      // Handle form submissions
+      document.querySelectorAll('form').forEach(form => {
+        form.addEventListener('submit', function(e) {
+          showLoading();
+        });
+      });
+    });
+
+    // Hide loading when page is fully loaded
+    window.addEventListener('load', hideLoading);
+  </script>
 </html>

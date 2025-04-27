@@ -177,16 +177,20 @@ def Login(request):
 @csrf_exempt
 def SignUp(request):
     if request.method == "POST":
+        print("-----------")
         username = request.POST.get("username")
         email = request.POST.get("email")
         password = request.POST.get("password")
         password2 = request.POST.get("confirm_password")
-        print(username,email,password,password2)
-        if username is None or email is None or password is None or password2 is None:
+        if username == "" or email == "" or password == "" or password2 == "":
             return render(request, 'Auth/signup.html',{"error":"All fields are required"})
         else:
             if password != password2:
                 return render(request, 'Auth/signup.html',{"error":"Password and Confirm Password doesn't match"})
+            if not len(username) >= 8:
+                return render(request, 'Auth/signup.html',{"error":"Username should 8 Character Long"})
+            elif not len(password) >= 8 :
+                return render(request, 'Auth/signup.html',{"error":"Password should 8 Character Long"})
             else:
                 try:
                     user = Blog_User(username=username,email=email,password=password)
@@ -324,17 +328,26 @@ def BlogSearch(request):
     query = request.GET.get("q")
     page = int(request.GET.get("page",1))
     if query:
-        blogs = Blog.objects.filter(title__icontains=query).order_by('-created_At').values('title','slug','blog_img','author__username','created_At')
+        blogs = Blog.objects.filter(title__icontains=query).order_by('-created_At').values(
+            'title',
+            'slug',
+            'blog_img',
+            'author__username',
+            'created_At'
+        )
         if blogs:
             paginator = Paginator(blogs,10)
             page_obj = paginator.get_page(page)
             result = list(page_obj.object_list)
-            print(result)
-            return JsonResponse({"results":result},safe=False)
+            # Convert CloudinaryResource to string URL
+            for blog in result:
+                if blog['blog_img']:
+                    blog['blog_img'] = str(blog['blog_img'])
+            return JsonResponse({"results": result}, safe=False)
         else:
-            return JsonResponse({"results":[]},safe=False)
+            return JsonResponse({"results": []}, safe=False)
     else:
-        return JsonResponse({"results":[]},safe=False)   
+        return JsonResponse({"results": []}, safe=False)   
 
 def Follow(request,username):
     if username:
@@ -497,41 +510,56 @@ def upload_profile_img(request):
         "Message":"Image Uploaded Successfully",
         "url": user.profile_img.url
     }, safe=False)
+@csrf_exempt
 def add_comment(request,slug):
     try:
         Auth_token = request.COOKIES.get("Auth_token")
+        if not Auth_token:
+            return JsonResponse({"status":False,"success":False,"message":"Please Login"},safe=False)
+            
         user = validateToken(Auth_token)
-        if user:
-            if slug:
-                blog = Blog.objects.get(slug=slug)
-                if blog:
-                    data = json.loads(request.body)
-                    content = data.get('content')
-                    parent_id = data.get('parent_id')
-                    if not content:
-                        return JsonResponse({"status":False,"success":False,"message":"Comment content cannot be empty"},safe=False)
-                    if parent_id is not None:
-                        parent_comment = Comment.objects.get(id=parent_id)
-                        new_comment = Comment.objects.create(
-                            post=blog,
-                            user=user,
-                            content=content,
-                            parent=parent_comment
-                        )
-                        return JsonResponse({"status":True,"success":True},safe=False)
-                    else:
-                        new_comment = Comment.objects.create(
-                            post=blog,
-                            user=user,
-                            content=content
-                        )
-                        return JsonResponse({"status":True,"success":True},safe=False)
-                else:
-                    return JsonResponse({"status":True,"success":False,"message":"Invalid Blog"},safe=False)
+        if not user:
+            return JsonResponse({"status":False,"success":False,"message":"Please Login"},safe=False)
+            
+        if not slug:
+            return JsonResponse({"status":False,"success":False,"message":"Missing Values"},safe=False)
+            
+        try:
+            blog = Blog.objects.get(slug=slug)
+        except Blog.DoesNotExist:
+            return JsonResponse({"status":False,"success":False,"message":"Invalid Blog"},safe=False)
+            
+        try:
+            data = json.loads(request.body)
+            content = data.get('content')
+            parent_id = data.get('parent_id')
+            
+            if not content:
+                return JsonResponse({"status":False,"success":False,"message":"Comment content cannot be empty"},safe=False)
+                
+            if parent_id is not None:
+                try:
+                    parent_comment = Comment.objects.get(id=parent_id)
+                    new_comment = Comment.objects.create(
+                        post=blog,
+                        user=user,
+                        content=content,
+                        parent=parent_comment
+                    )
+                except Comment.DoesNotExist:
+                    return JsonResponse({"status":False,"success":False,"message":"Invalid parent comment"},safe=False)
             else:
-                return JsonResponse({"status":True,"success":False,"message":"Missing Values"},safe=False)
-        else:
-                return JsonResponse({"status":True,"success":False,"message":"Login To Comment"},safe=False)
+                new_comment = Comment.objects.create(
+                    post=blog,
+                    user=user,
+                    content=content
+                )
+                
+            return JsonResponse({"status":True,"success":True},safe=False)
+            
+        except json.JSONDecodeError:
+            return JsonResponse({"status":False,"success":False,"message":"Invalid request data"},safe=False)
+            
     except Exception as e:
-        print(e)
+        print(f"Comment Error: {e}")
         return JsonResponse({"status":False,"success":False,"message":"Server Error Please Try Again"},safe=False)
