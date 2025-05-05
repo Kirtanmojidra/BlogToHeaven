@@ -5,7 +5,8 @@
 ![Issues](https://img.shields.io/github/issues/Kirtanmojidra/BlogToHeaven)
 ![Stars](https://img.shields.io/github/stars/Kirtanmojidra/BlogToHeaven?style=social)
 
-> A modern and minimalistic blogging platform to write, share, and connect — also can be used for offline and locally hosting.
+> A modern and minimalistic blogging platform to write, share, and connect — also can be used for offline and
+locally hosting.
 
 ---
 
@@ -49,45 +50,38 @@ Before you begin, ensure you have the following installed:
    git clone https://github.com/Kirtanmojidra/BlogToHeaven.git
    cd BlogToHeaven
    ```
-2. **Set Up a Virtual Environment
+2. **Set Up a Virtual Environment (for Python packages)**
+
    It's best practice to create a virtual environment for your project:
+
    ```bash
    python3 -m venv venv
    source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
    ```
-3.
-2. **Set Up a Virtual Environment
+3. **Install Python Dependencies**
 
-   It's best practice to create a virtual environment for your project:
-   
+   Install the required Python packages:
+
    ```bash
-   python3 -m venv venv
-   source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
-  ```
-3. **Install Python Dependencies
+   pip install -r requirements.txt
+   ```
+4 **Install Node.js Dependencies (for front-end themes)**
 
-  Install the required Python packages:
-  
-  ```bash
-  pip install -r requirements.txt
-  ```
-4 **Install Node.js Dependencies
-  
-  Navigate to the theme/static_src directory and install the necessary Node.js packages:
-  
-  ```bash
-  cd theme/static_src
-  npm install
-  ```
-5 **Start Django Development Server
+   Navigate to the theme/static_src directory and install the necessary Node.js packages:
 
-  Start Your Development server by execute following command:
-  
-  ```bash
-  python manage.py runserver
-  ```
+   ```bash
+   cd theme/static_src
+   npm install
+   ```
+5 **Start Django Development Server**
 
-6 **Run Tailwind in Development Mode
+   Start Your Development server by execute following command:
+
+   ```bash
+   python manage.py runserver
+   ```
+
+6 **Run Tailwind in Development Mode (for front-end themes)**
 
    Start the Tailwind development server:
 
@@ -95,7 +89,4 @@ Before you begin, ensure you have the following installed:
    python manage.py tailwind start
    ```
 
-  
-
-
-   
+   Make sure both servers are running before accessing the application via your browser at http://localhost:8000
