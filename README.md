@@ -39,6 +39,8 @@ Before you begin, ensure you have the following installed:
 - [Git](https://git-scm.com/) – Version Control System
 - [Node.js](https://nodejs.org/) – JavaScript Runtime
 - [npm](https://www.npmjs.com/) – Node Package Manager
+- [Django](https://www.djangoproject.com/) – Django
+
 
 ## 🧪 Steps to Set Up Locally
 
