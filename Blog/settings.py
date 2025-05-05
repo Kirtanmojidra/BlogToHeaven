@@ -183,18 +183,6 @@ QUILL_CONFIGS = {
                 ["clean"],
 
             ],
-            "imageCompressor": {
-                "quality": 0.1,
-                "maxWidth": 2000,
-                "maxHeight": 2000,
-                "imageType": "image/jpeg",
-                "keepImageTypes": [],
-                "ignoreImageTypes": ["image/webp"],
-                "debug": False,
-                "suppressErrorLogging": True,
-            },
-            # quill-resize
-            
             "resize": {
                 "showSize": True,
                 "locale": {},
