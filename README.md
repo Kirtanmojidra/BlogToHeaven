@@ -5,7 +5,7 @@
 ![Issues](https://img.shields.io/github/issues/Kirtanmojidra/BlogToHeaven)
 ![Stars](https://img.shields.io/github/stars/Kirtanmojidra/BlogToHeaven?style=social)
 
-> A modern and minimalistic blogging platform to write, share, and connect — all offline and locally hosted.
+> A modern and minimalistic blogging platform to write, share, and connect — also can be used for offline and locally hosted.
 
 ---
 
