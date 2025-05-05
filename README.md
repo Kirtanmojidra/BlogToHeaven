@@ -65,28 +65,28 @@ Before you begin, ensure you have the following installed:
    ```bash
    pip install -r requirements.txt
    ```
-4 **Install Node.js Dependencies (for front-end themes)**
-
-   Navigate to the theme/static_src directory and install the necessary Node.js packages:
-
-   ```bash
-   cd theme/static_src
-   npm install
-   ```
-5 **Start Django Development Server**
-
-   Start Your Development server by execute following command:
-
-   ```bash
-   python manage.py runserver
-   ```
-
-6 **Run Tailwind in Development Mode (for front-end themes)**
-
-   Start the Tailwind development server:
-
-   ```bash
-   python manage.py tailwind start
-   ```
+   4 **Install Node.js Dependencies (for front-end themes)**
+   
+      Navigate to the theme/static_src directory and install the necessary Node.js packages:
+   
+      ```bash
+      cd theme/static_src
+      npm install
+      ```
+   5 **Start Django Development Server**
+   
+      Start Your Development server by execute following command:
+   
+      ```bash
+      python manage.py runserver
+      ```
+   
+   6 **Run Tailwind in Development Mode (for front-end themes)**
+   
+      Start the Tailwind development server:
+   
+      ```bash
+      python manage.py tailwind start
+      ```
 
    Make sure both servers are running before accessing the application via your browser at http://localhost:8000
