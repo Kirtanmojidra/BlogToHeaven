@@ -54,7 +54,7 @@ Before you begin, ensure you have the following installed:
    git clone https://github.com/Kirtanmojidra/BlogToHeaven.git
    cd BlogToHeaven
    ```
-2. **Set Up a Virtual Environment (for Python packages)**
+1. **Set Up a Virtual Environment (for Python packages)**
 
    It's best practice to create a virtual environment for your project:
 
@@ -62,14 +62,14 @@ Before you begin, ensure you have the following installed:
    python3 -m venv venv
    source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
    ```
-3. **Install Python Dependencies**
+1. **Install Python Dependencies**
 
    Install the required Python packages:
 
    ```bash
    pip install -r requirements.txt
    ```
-   4 **Install Node.js Dependencies (for front-end themes)**
+1. **Install Node.js Dependencies (for front-end themes)**
    
       Navigate to the theme/static_src directory and install the necessary Node.js packages:
    
@@ -77,7 +77,17 @@ Before you begin, ensure you have the following installed:
       cd theme/static_src
       npm install
       ```
-   5 **Start Django Development Server**
+
+1. **Run Migrations (Set up the Database)**
+   After setting up your virtual environment and installing dependencies, run the following commands to apply database migrations:
+   ```bash
+   # Generate migration files based on changes in models
+   python manage.py makemigrations
+   # Apply the migrations to the database
+   python manage.py migrate
+   ```
+
+1. **Start Django Development Server**
    
       Start Your Development server by execute following command:
    
@@ -85,7 +95,7 @@ Before you begin, ensure you have the following installed:
       python manage.py runserver
       ```
    
-   6 **Run Tailwind in Development Mode (for front-end themes)**
+1. **Run Tailwind in Development Mode (for front-end themes)**
    
       Start the Tailwind development server:
    
