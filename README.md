@@ -29,10 +29,66 @@
 
 ---
 
-## 📦 Installation
+# 🚀 Installation Guide
 
-Clone the repository and set up the project locally.
+## 📦 Prerequisites
 
-```bash
-git clone https://github.com/Kirtanmojidra/BlogToHeaven.git
-cd BlogToHeaven
+Before you begin, ensure you have the following installed:
+
+- [Git](https://git-scm.com/) – Version Control System
+- [Node.js](https://nodejs.org/) – JavaScript Runtime
+- [npm](https://www.npmjs.com/) – Node Package Manager
+
+## 🧪 Steps to Set Up Locally
+
+1. **Clone the Repository**
+
+   Open your terminal and run:
+
+   ```bash
+   git clone https://github.com/Kirtanmojidra/BlogToHeaven.git
+   cd BlogToHeaven
+   ```
+2 **Set Up a Virtual Environment
+
+   It's best practice to create a virtual environment for your project:
+   
+   ```bash
+   python3 -m venv venv
+   source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
+  ```
+3 **Install Python Dependencies
+
+  Install the required Python packages:
+  
+  ```bash
+  pip install -r requirements.txt
+  ```
+4 **Install Node.js Dependencies
+  
+  Navigate to the theme/static_src directory and install the necessary Node.js packages:
+  
+  ```bash
+  cd theme/static_src
+  npm install
+  ```
+5 **Start Django Development Server
+
+  Start Your Development server by execute following command:
+  
+  ```bash
+  python manage.py runserver
+  ```
+
+6 **Run Tailwind in Development Mode
+
+   Start the Tailwind development server:
+
+   ```bash
+   python manage.py tailwind start
+   ```
+
+  
+
+
+   
