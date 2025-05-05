@@ -26,7 +26,7 @@ locally hosting.
 
 | Frontend        | Backend       | Database     | Other             |
 |-----------------|---------------|--------------|--------------------|
-| HTML, CSS, JS   | Python (Flask/Django) | SQLite / PostgreSQL | Bootstrap, Jinja2, Markdown |
+| HTML, CSS, JS   | Python (Django) | PostgreSQL | Jinja2, QuillJs |
 
 ---
 
