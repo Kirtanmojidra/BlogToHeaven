@@ -94,3 +94,11 @@ Before you begin, ensure you have the following installed:
       ```
 
    Make sure both servers are running before accessing the application via your browser at http://localhost:8000
+
+## 🚀 Website Screenshot
+
+![Homepage Screenshot](assets/blogtoheaven-homepage.png)
+![Profile Screenshot](assets/blogtoheaven-Profile.png)
+![Edit Blog Screenshot](assets/blogtoheaven-EditBlog.png)
+![Categories Screenshot](assets/blogtoheaven-Categories.png)
+![Blog Screenshot](assets/blogtoheaven-Blogs.png)

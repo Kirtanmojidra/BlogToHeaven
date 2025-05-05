@@ -185,6 +185,7 @@ QUILL_CONFIGS = {
                 ],
                 ["code-block", "link", "image"],
                 ["clean"],
+
             ],
             "imageCompressor": {
                 "quality": 0.1,
@@ -197,6 +198,7 @@ QUILL_CONFIGS = {
                 "suppressErrorLogging": True,
             },
             # quill-resize
+            
             "resize": {
                 "showSize": True,
                 "locale": {},
