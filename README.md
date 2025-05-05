@@ -49,7 +49,14 @@ Before you begin, ensure you have the following installed:
    git clone https://github.com/Kirtanmojidra/BlogToHeaven.git
    cd BlogToHeaven
    ```
-2 **Set Up a Virtual Environment
+2. **Set Up a Virtual Environment
+   It's best practice to create a virtual environment for your project:
+   ```bash
+   python3 -m venv venv
+   source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
+   ```
+3.
+2. **Set Up a Virtual Environment
 
    It's best practice to create a virtual environment for your project:
    
@@ -57,7 +64,7 @@ Before you begin, ensure you have the following installed:
    python3 -m venv venv
    source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
   ```
-3 **Install Python Dependencies
+3. **Install Python Dependencies
 
   Install the required Python packages:
   
