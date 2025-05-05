@@ -37,7 +37,8 @@ locally hosting.
 Before you begin, ensure you have the following installed:
 
 - [Django](https://www.djangoproject.com/) – Django
-- [Tailwind](https://tailwindcss.com/docs/installation/using-vite) - Tailwind
+- [Tailwind](https://tailwindcss.com/) - Tailwind
+- [Quilljs](https://quilljs.com/) – quillJs
 - [Git](https://git-scm.com/) – Version Control System
 - [Node.js](https://nodejs.org/) – JavaScript Runtime
 - [npm](https://www.npmjs.com/) – Node Package Manager
