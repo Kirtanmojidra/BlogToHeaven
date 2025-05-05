@@ -1,4 +1,4 @@
-# ✨ BlogToHeaven
+# ✨ BlogToHeaven ( hosted on free server, wait while Load Application )
 
 ![GitHub repo size](https://img.shields.io/github/repo-size/Kirtanmojidra/BlogToHeaven)
 ![License](https://img.shields.io/github/license/Kirtanmojidra/BlogToHeaven)
