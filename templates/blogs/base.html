@@ -196,66 +196,87 @@
       "Gathering the best stories for you...",
       "Making everything just right..."
     ];
-
+  
     let messageInterval;
     let currentMessageIndex = 0;
-
+  
     function getNextMessage() {
       currentMessageIndex = (currentMessageIndex + 1) % loadingMessages.length;
       return loadingMessages[currentMessageIndex];
     }
-
+  
     function updateLoadingMessage() {
       const messageElement = document.getElementById('loadingMessage');
-      messageElement.style.opacity = '0';
-      
-      setTimeout(() => {
-        messageElement.textContent = getNextMessage();
-        messageElement.style.opacity = '1';
-      }, 500);
+      if (messageElement) {
+        messageElement.style.opacity = '0';
+  
+        setTimeout(() => {
+          messageElement.textContent = getNextMessage();
+          messageElement.style.opacity = '1';
+        }, 500);
+      }
     }
-
+  
     // Loading state management
     function showLoading() {
       const overlay = document.getElementById('loadingOverlay');
       const messageElement = document.getElementById('loadingMessage');
-      
-      // Show initial random message
-      currentMessageIndex = Math.floor(Math.random() * loadingMessages.length);
-      messageElement.textContent = loadingMessages[currentMessageIndex];
-      
-      // Start changing messages every 2 seconds
-      messageInterval = setInterval(updateLoadingMessage, 2000);
-      
-      overlay.classList.add('active');
-      document.body.style.overflow = 'hidden';
+  
+      if (overlay && messageElement) {
+        // Show initial random message
+        currentMessageIndex = Math.floor(Math.random() * loadingMessages.length);
+        messageElement.textContent = loadingMessages[currentMessageIndex];
+  
+        // Start changing messages every 2 seconds
+        messageInterval = setInterval(updateLoadingMessage, 2000);
+  
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
     }
-
+  
     function hideLoading() {
       const overlay = document.getElementById('loadingOverlay');
-      clearInterval(messageInterval);
-      overlay.classList.remove('active');
-      document.body.style.overflow = 'auto';
+      if (overlay) {
+        clearInterval(messageInterval);
+        overlay.classList.remove('active');
+        document.body.style.overflow = 'auto';
+      }
     }
-
+  
     // Add loading state to specific elements
     document.addEventListener('DOMContentLoaded', function() {
-      // Handle navigation links
-      document.querySelectorAll('.loading-trigger').forEach(element => {
-        element.addEventListener('click', function(e) {
-          showLoading();
+      // Check if elements with class 'loading-trigger' exist
+      const loadingTriggers = document.querySelectorAll('.loading-trigger');
+      if (loadingTriggers.length > 0) {
+        loadingTriggers.forEach(element => {
+          element.addEventListener('click', function(e) {
+            showLoading();
+          });
         });
-      });
-
-      // Handle form submissions
-      document.querySelectorAll('form').forEach(form => {
-        form.addEventListener('submit', function(e) {
-          showLoading();
+      }
+  
+      // Check if form elements exist
+      const forms = document.querySelectorAll('form');
+      if (forms.length > 0) {
+        forms.forEach(form => {
+          form.addEventListener('submit', function(e) {
+            showLoading();
+          });
         });
-      });
+      }
     });
-
+  
     // Hide loading when page is fully loaded
     window.addEventListener('load', hideLoading);
+  
+    window.addEventListener('pageshow', function(event) {
+      if (event.persisted) {
+        hideLoading();
+      }
+    });
+  
+    window.addEventListener('pagehide', hideLoading);
   </script>
+  
 </html>
