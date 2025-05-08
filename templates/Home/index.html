@@ -155,7 +155,7 @@
         {% for blog in blogs %}
           <div class="group bg-black border border-sky-500/30 rounded-lg overflow-hidden hover:border-sky-400/50 transition-all duration-300 hover:shadow-lg hover:shadow-sky-500/20">
               <div class="relative h-36 overflow-hidden">
-                {% cloudinary blog.blog_img  format="jpg" width=120 height=80 crop="fill" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500" alt="{{ blog.slug }}" %}
+                {% cloudinary blog.blog_img  format="jpg" width=854 height=480 crop="fill" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500" alt="{{ blog.slug }}" %}
                 <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
               </div>
               <div class="p-3">
@@ -168,7 +168,7 @@
                   <div class="flex items-center justify-between">
                       <div class="flex items-center gap-2">
                           <div class="w-8 h-8 rounded-full bg-black/40 backdrop-blur-sm border border-sky-500/20 overflow-hidden">
-                            {% cloudinary blog.author.profile_img  format="jpg" width=120 height=80 crop="fill" class="w-full h-full object-cover" alt="{{ blog.author.username }}" %}
+                            {% cloudinary blog.author.profile_img  format="jpg" width=854 height=480 crop="fill" class="w-full h-full object-cover" alt="{{ blog.author.username }}" %}
                           </div>
                           <span class="text-sky-400/90 text-sm">{{ blog.author.username }}</span>
                       </div>
@@ -207,7 +207,7 @@
             <a href="{% url 'Catogories' cat.name %}" class="group relative overflow-hidden rounded-xl bg-gray-950 hover:bg-gray-900 transition-all duration-300 animate__animated animate__fadeIn border border-sky-400 loading-trigger">
                 <div class="p-8 text-center">
                     <div class="mb-4 text-sky-400 group-hover:scale-110 transition-transform duration-300 flex justify-center">
-                        {% cloudinary cat.image  format="jpg" width=120 height=80 crop="fill" class="h-10 w-10" alt="categoty" %}
+                        {% cloudinary cat.image  format="jpg" width=854 height=480 crop="fill" class="h-10 w-10" alt="categoty" %}
                     </div>
                     <h3 class="text-xl font-semibold text-white mb-2 group-hover:text-sky-400 transition-colors duration-300">{{ cat.name }}</h3>
                 </div>

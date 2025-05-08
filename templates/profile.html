@@ -11,7 +11,7 @@
         <div class="flex-shrink-0 md:w-1/3 flex flex-col items-center">
           <div class="relative group">
            
-            {% cloudinary Auth_user.profile_img.url  format="jpg" width=120 height=80 crop="fill" class="w-32 h-32 rounded-full border-2 border-sky-500/20 object-cover object-center" id="profile" %}
+            {% cloudinary Auth_user.profile_img.url  format="jpg" width=854 height=480 crop="fill" class="w-32 h-32 rounded-full border-2 border-sky-500/20 object-cover object-center" id="profile" %}
             {% if Auth_user.username == user.username %}  
             <div class="absolute inset-0 flex items-center justify-center bg-black/60 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300">
               <label for="profile_image" class="cursor-pointer">
@@ -92,7 +92,7 @@
         <div class="group bg-black border border-sky-500/30 rounded-lg overflow-hidden hover:border-sky-400/50 transition-all duration-300 hover:shadow-lg hover:shadow-sky-500/20">
           <a href="{% url 'Blog_Details' blog.slug %}">
             <div class="relative h-36 overflow-hidden">
-              {% cloudinary blog.blog_img  format="jpg" width=120 height=80 crop="fill" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500" alt="{{ blog.title }}" %}
+              {% cloudinary blog.blog_img  format="jpg" width=854 height=480 crop="fill" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500" alt="{{ blog.title }}" %}
               <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
             </div>
           </a>
